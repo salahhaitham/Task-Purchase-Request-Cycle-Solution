@@ -1,0 +1,6 @@
+<odoo>
+
+
+    <menuitem id="purchase_request_baseMenu_id" name="Purchase Requests"/>
+      <menuitem id="purchase_menu_id" name="purchase requests" parent="purchase_request_baseMenu_id"/>
+</odoo>

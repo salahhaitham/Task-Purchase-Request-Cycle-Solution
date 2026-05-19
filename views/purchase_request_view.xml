@@ -1,0 +1,79 @@
+<odoo>
+     <record id="purchase_request_view" model="ir.ui.view">
+         <field name="name">purchase listview </field>
+         <field name="model">purchase.request</field>
+         <field name="arch" type="xml">
+              <list>
+                  <field name="name"/>
+                  <field name="state"/>
+                         <field name="analytical_account"/>
+                      <field name="creation_date"/>
+
+              </list>
+         </field>
+
+     </record>
+
+
+
+
+<record id="purchase_request_form" model="ir.ui.view">
+    <field name="name">purchase form</field>
+    <field name="model">purchase.request</field>
+    <field name="arch" type="xml">
+        <form >
+
+            <header>
+                <button name="action_confirm" string="Confirm" type="object" class="btn-success" invisible="state!='draft'"/>
+
+            </header>
+            <sheet>
+              <div name="button_box" class="oe_button_box">
+                  <button name="open_purchase_order" string="Owner" invisible="not owner_id" type="object" icon="fa-file-text-o"/>
+              </div>
+                <group>
+                        <field name="name" readonly="state=='confirm'"/>
+                        <field name="state" readonly="state=='confirm'"/>
+                     <field name="analytical_account" readonly="state=='confirm'"/>
+                  <field name="creation_date" readonly="state=='confirm'"/>
+                    <field name="created_by" readonly="state=='confirm'"/>
+                    <field name="requested_by" readonly="state=='confirm'"/>
+
+                             <field name="requested_on" readonly="state=='confirm'"/>
+                </group>
+   <notebook>
+               ```xml
+<page string="Purchase Lines">
+    <field name="purchase_lines_ids">
+        <list editable="bottom">
+            <field name="product_id" readonly="parent.state=='confirm'"/>
+
+            <field name="vendor_id"
+                   domain="[('is_company', '=', True)]" readonly="parent.state=='confirm'"/>
+
+            <field name="quantity" readonly="parent.state=='confirm'"/>
+
+            <field name="uom_id"  readonly="parent.state=='confirm'"
+                   optional="show"/>
+
+        </list>
+    </field>
+</page>
+```
+
+             </notebook>
+
+            </sheet>
+
+        </form>
+    </field>
+</record>
+
+    <record id="purchase_action" model="ir.actions.act_window">
+        <field name="name">purchase request </field>
+        <field name="res_model">purchase.request</field>
+            <field name="view_mode">list,form</field>
+
+    </record>
+<menuitem id="purchase_request_id" name="purchase requests" parent="purchase_menu_id" action="purchase_action"/>
+</odoo>
