@@ -28,9 +28,17 @@
 
             </header>
             <sheet>
-              <div name="button_box" class="oe_button_box">
-                  <button name="open_purchase_order" string="Owner" invisible="not owner_id" type="object" icon="fa-file-text-o"/>
-              </div>
+             <div name="button_box" class="oe_button_box">
+    <button name="action_view_orders"
+            type="object"
+            class="oe_stat_button"
+            icon="fa-shopping-cart"
+            invisible="purchase_order_count == 0">
+        <field name="purchase_order_count"
+               string="Orders"
+               widget="statinfo"/>
+    </button>
+</div>
                 <group>
                         <field name="name" readonly="state=='confirm'"/>
                         <field name="state" readonly="state=='confirm'"/>

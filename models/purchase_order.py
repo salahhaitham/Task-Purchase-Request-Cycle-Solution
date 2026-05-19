@@ -7,6 +7,9 @@ class PurchaseOrderInherit(models.Model):
 
     purchase_request_ids = fields.Many2many(
         'purchase.request',
+        'purchase_request_order_rel',
+        'order_id',
+        'request_id',
         string='Purchase Requests'
     )
     purchase_request_count = fields.Integer(

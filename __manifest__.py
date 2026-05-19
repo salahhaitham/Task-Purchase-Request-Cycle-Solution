@@ -17,6 +17,8 @@
         'views/base_menu.xml',
         'views/purchase_request_view.xml',
         'views/sequence.xml',
+        'views/purchase_order.xml',
+
 
 
 

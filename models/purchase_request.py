@@ -31,9 +31,12 @@ class PurchaseRequest(models.Model):
 
     purchase_lines_ids=fields.One2many('purchase.request.line',
                                        'purchase_request_id',string='Purchase Lines')
-    
+
     purchase_order_ids = fields.Many2many(
         'purchase.order',
+        'purchase_request_order_rel',
+        'request_id',
+        'order_id',
         string='Purchase Orders'
     )
     purchase_order_count = fields.Integer(
@@ -54,25 +57,28 @@ class PurchaseRequest(models.Model):
         }
 
     def action_confirm(self):
-            print("inside action_confirm")
-            vendors={}
-            for line in self.purchase_lines_ids:
-                vendor=line.vendor_id
-                if vendor not in vendors:
-                   vendors[vendor]=[]
-                vendors[vendor].append(line)
+        vendors = {}
+        for line in self.purchase_lines_ids:
+            vendor = line.vendor_id
+            if vendor not in vendors:
+                vendors[vendor] = []
+            vendors[vendor].append(line)
 
-            for vendor,lines in vendors.items()    :
-                self.env['purchase.order'].create({
-                    'partner_id':vendor.id,
-                    'order_line':[(0,0,{
-                        'product_id':line.product_id.id ,
-                        'product_qty':line.quantity,
-                        'uom_id':line.uom_id.id,
-                    })]
-                })
+        orders = self.env['purchase.order']
+        for vendor, lines in vendors.items():
+            order = self.env['purchase.order'].create({
+                'partner_id': vendor.id,
+                'order_line': [(0, 0, {
+                    'product_id': line.product_id.id,
+                    'product_qty': line.quantity,
 
-            self.state = 'confirm'
+                    'price_unit': 0,
+                }) for line in lines],
+            })
+            orders |= order  # ✅ جمع الـ orders
+
+        self.purchase_order_ids = orders  # ✅ ربط الـ orders بالـ request
+        self.state = 'confirm'
     @api.model
     def create(self, vals):
         res=super().create(vals)
