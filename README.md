@@ -1,4 +1,4 @@
-# Purchase Request Module – Odoo 17
+# Purchase Request Task – Odoo 17
 
 ## Overview
 This module extends the Purchase application in Odoo by introducing a Purchase Request workflow.  
