@@ -6,7 +6,6 @@ from odoo import fields, models, api
 class PurchaseRequest(models.Model):
     _name = 'purchase.request'
 
-
     name=fields.Char(string="Request Name",required=True,default='NEW')
     state=fields.Selection([
         ('draft', 'Draft'),
@@ -32,12 +31,8 @@ class PurchaseRequest(models.Model):
     purchase_lines_ids=fields.One2many('purchase.request.line',
                                        'purchase_request_id',string='Purchase Lines')
 
-    purchase_order_ids = fields.Many2many(
-        'purchase.order',
-        'purchase_request_order_rel',
-        'request_id',
-        'order_id',
-        string='Purchase Orders'
+    purchase_order_ids = fields.One2many(
+        'purchase.order','purchase_request_id'
     )
     purchase_order_count = fields.Integer(
         compute='_compute_purchase_order_count'
@@ -75,9 +70,9 @@ class PurchaseRequest(models.Model):
                     'price_unit': 0,
                 }) for line in lines],
             })
-            orders |= order  # ✅ جمع الـ orders
 
-        self.purchase_order_ids = orders  # ✅ ربط الـ orders بالـ request
+
+            self.purchase_order_ids = [(4, order.id)]
         self.state = 'confirm'
     @api.model
     def create(self, vals):
